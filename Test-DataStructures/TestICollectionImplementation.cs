@@ -7,7 +7,7 @@ using System.Linq;
 namespace TestDataStructures
 {
     /**
-        Tests that all ICollection implementations should pass.
+        Tests that all unbounded ICollection implementations should pass.
 
         Note: when adding items to a collection during a test, always add distinct items. This allows this test fixture
         to support sets and other similar collections.
@@ -155,6 +155,79 @@ namespace TestDataStructures
             }
 
             Assert.AreEqual(5, numElements);
+        }
+
+        [Test]
+        public void AddTenThousandItems()
+        {
+            for (int i = 0; i < 10000; ++i)
+            {
+                m_collection.Add(i);
+            }
+
+            Assert.AreEqual(10000, m_collection.Count);
+        }
+
+        [Test]
+        public void ICollectionScenario()
+        {
+            void DoScenario() 
+            {
+                m_collection.Add(1);
+                m_collection.Add(2);
+                m_collection.Add(3);
+                CheckCountAndEnumeratorLength(3);
+
+                m_collection.Remove(3);
+                m_collection.Remove(4);
+                CheckCountAndEnumeratorLength(2);
+
+                m_collection.Add(3);
+                CheckCountAndEnumeratorLength(3);
+
+                m_collection.Add(4);
+                CheckCountAndEnumeratorLength(4);
+
+                m_collection.Remove(1);
+                CheckCountAndEnumeratorLength(3);
+
+                for (int i = 1; i <= 100; ++i)
+                {
+                    m_collection.Add(10*i);
+                }
+
+                CheckCountAndEnumeratorLength(103);
+
+                m_collection.Add(0);
+
+                for (int i = 1; i < 100; ++i)
+                {
+                    m_collection.Add(i*1234);
+                    m_collection.Remove((i-1)*1234);
+                    CheckCountAndEnumeratorLength(104);
+                    Assert.IsTrue(m_collection.Contains(i*1234));
+                    Assert.IsFalse(m_collection.Contains((i-1)*1234));
+                }
+            }
+
+            for (int i = 0; i < 5; ++i)
+            {
+                DoScenario();
+                m_collection.Clear();
+            }
+        }
+
+        private void CheckCountAndEnumeratorLength(int expectedCount)
+        {
+            Assert.AreEqual(m_collection.Count, expectedCount);
+            int numElements = 0;
+
+            foreach (var element in m_collection)
+            {
+                ++numElements;
+            }
+
+            Assert.AreEqual(m_collection.Count, numElements);
         }
     }
 } 

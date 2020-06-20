@@ -26,6 +26,13 @@ namespace Datastructures
 
         public void Add(T item)
         {
+            if (Count == m_items.Length)
+            {
+                var newItemsArray = new T[m_items.Length * 2];
+                m_items.CopyTo(newItemsArray, 0);
+                m_items = newItemsArray;
+            }
+
             m_items[Count] = item;
             ++Count;
         }
