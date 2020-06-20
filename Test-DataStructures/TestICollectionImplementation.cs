@@ -1,7 +1,6 @@
 using NUnit.Framework;
 
 using Datastructures;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace TestDataStructures
@@ -13,7 +12,13 @@ namespace TestDataStructures
         to support sets and other similar collections.
     */
     [TestFixture(typeof(Vector<int>))]
-    public class TestICollectionImplementation<Collection> where Collection : ICollection<int>, new()
+
+    // run tests against .NET standard library collections to make sure behavior is consistent with new collections
+    [TestFixture(typeof(System.Collections.Generic.List<int>))]
+    [TestFixture(typeof(System.Collections.Generic.LinkedList<int>))]
+    [TestFixture(typeof(System.Collections.Generic.HashSet<int>))]
+    [TestFixture(typeof(System.Collections.Generic.SortedSet<int>))]
+    public class TestICollectionImplementation<Collection> where Collection : System.Collections.Generic.ICollection<int>, new()
     {
         private Collection m_collection;
 
@@ -116,7 +121,7 @@ namespace TestDataStructures
             var array = new int[10] {1,2,3,4,5,6,7,8,9,10};
             m_collection.CopyTo(array,3);
 
-            // it's not necessarily the case that elements 3-5 of array are 10,20,30 in order, so we don't assert on that
+            // it's not necessarily the case that elements 3-5 of array are 10,20,30 in order, so we don't assert that
             Assert.AreEqual(1, array[0]);
             Assert.AreEqual(2, array[1]);
             Assert.AreEqual(3, array[2]);

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Datastructures
 {
-    public class Vector<T> : ICollection<T>
+    public class Vector<T> : ICollection<T>, IList<T>
     {
         private T[] m_items;
 
@@ -26,12 +26,7 @@ namespace Datastructures
 
         public void Add(T item)
         {
-            if (Count == m_items.Length)
-            {
-                var newItemsArray = new T[m_items.Length * 2];
-                m_items.CopyTo(newItemsArray, 0);
-                m_items = newItemsArray;
-            }
+            GrowBackingArrayIfNeeded();
 
             m_items[Count] = item;
             ++Count;
@@ -41,22 +36,30 @@ namespace Datastructures
         {
             get
             {
-                RangeCheck(index);
+                RangeCheckIndexer(index);
                 return m_items[index];
             }
 
             set
             {
-                RangeCheck(index);
+                RangeCheckIndexer(index);
                 m_items[index] = value;
             }
         }
 
-        private void RangeCheck(int index)
+        private void RangeCheckIndexer(int index)
         {
             if (index < 0 || index >= Count) 
             {
-                throw new IndexOutOfRangeException($"Index {index} out of range of vector (Count = {Count})");
+                throw new ArgumentOutOfRangeException($"Index {index} out of range of vector (Count = {Count})");
+            }
+        }
+
+        private void RangeCheckInsert(int index)
+        {
+            if (index < 0 || index > Count) 
+            {
+                throw new ArgumentOutOfRangeException($"Index {index} out of range of vector (Count = {Count})");
             }
         }
 
@@ -67,15 +70,7 @@ namespace Datastructures
 
         public bool Contains(T item)
         {
-            for (int i = 0; i < Count; ++i)
-            {
-                if (EqualityComparer<T>.Default.Equals(m_items[i], item))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return IndexOf(item) != -1;
         }
 
         public void CopyTo(T[] array, int arrayIndex)
@@ -88,18 +83,12 @@ namespace Datastructures
 
         public bool Remove(T item)
         {
-            for (int i = 0; i < Count; ++i)
-            {
-                if (EqualityComparer<T>.Default.Equals(m_items[i], item))
-                {
-                    for (int indexForShift = i+1; indexForShift < Count; ++indexForShift)
-                    {
-                        m_items[indexForShift-1] = m_items[indexForShift];
-                    }
+            int itemIndex = IndexOf(item);
 
-                    --Count;
-                    return true;
-                }
+            if(itemIndex != -1)
+            {
+                RemoveAt(itemIndex);
+                return true;
             }
 
             return false;
@@ -116,6 +105,54 @@ namespace Datastructures
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
+        }
+
+        public int IndexOf(T item)
+        {
+            for (int i = 0; i < Count; ++i)
+            {
+                if (EqualityComparer<T>.Default.Equals(m_items[i], item))
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        public void Insert(int index, T item)
+        {
+            RangeCheckInsert(index);
+            GrowBackingArrayIfNeeded();
+
+            for (int shiftIndex = Count - 1; shiftIndex >= index; --shiftIndex)
+            {
+                m_items[shiftIndex+1] = m_items[shiftIndex];
+            }
+
+            m_items[index] = item;
+
+            ++Count;
+        }
+
+        private void GrowBackingArrayIfNeeded()
+        {
+            if (Count == m_items.Length)
+            {
+                var newItemsArray = new T[m_items.Length * 2];
+                m_items.CopyTo(newItemsArray, 0);
+                m_items = newItemsArray;
+            }           
+        }
+
+        public void RemoveAt(int index)
+        {
+            for (int indexForShift = index+1; indexForShift < Count; ++indexForShift)
+            {
+                m_items[indexForShift-1] = m_items[indexForShift];
+            }
+
+            --Count;            
         }
     }
 }
