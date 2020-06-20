@@ -23,10 +23,9 @@ namespace TestDataStructures
         }
 
         [Test]
-        public void AddOneItem()
+        public void AddAndAccessSingleItem()
         {
             m_vector.Add(7);
-            Assert.AreEqual(1, m_vector.Count);
             Assert.AreEqual(7, m_vector[0]);
         }
 
@@ -39,7 +38,15 @@ namespace TestDataStructures
         }
 
         [Test]
-        public void SetAfterAdding()
+        public void IndexerGetOutOfRangeThrowsExceptionOnNonEmptyVector()
+        {
+            m_vector.Add(7);
+            Assert.Throws<IndexOutOfRangeException>(() => { var x = m_vector[1]; });
+            Assert.Throws<IndexOutOfRangeException>(() => { var x = m_vector[-1]; });
+        }
+
+        [Test]
+        public void SetIndexAfterAdding()
         {
             m_vector.Add(7);
             m_vector[0] = 9;
@@ -55,5 +62,23 @@ namespace TestDataStructures
             Assert.Throws<IndexOutOfRangeException>(() => { m_vector[1] = 7; });            
         }
 
+        [Test]
+        public void IndexerSetOutOfRangeThrowsExceptionOnNonEmptyVector()
+        {
+            m_vector.Add(7);
+            Assert.Throws<IndexOutOfRangeException>(() => { m_vector[-1] = 7; });
+            Assert.Throws<IndexOutOfRangeException>(() => { m_vector[1] = 7; });             
+        }
+
+        [Test]
+        public void OtherItemsStillPresentAfterRemove()
+        {
+            m_vector.Add(1);
+            m_vector.Add(2);
+            m_vector.Add(3);
+            m_vector.Remove(2);
+            Assert.AreEqual(1, m_vector[0]);
+            Assert.AreEqual(3, m_vector[1]);
+        }
     }
 }

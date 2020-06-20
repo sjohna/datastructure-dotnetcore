@@ -1,10 +1,12 @@
 
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Datastructures
 {
-    public class Vector<T>
+    public class Vector<T> : ICollection<T>
     {
         private T[] m_items;
 
@@ -13,6 +15,8 @@ namespace Datastructures
             get;
             private set;
         }
+
+        public bool IsReadOnly => false;
 
         public Vector()
         {
@@ -47,6 +51,50 @@ namespace Datastructures
             {
                 throw new IndexOutOfRangeException($"Index {index} out of range of vector (Count = {Count})");
             }
+        }
+
+        public void Clear()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Contains(T item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void CopyTo(T[] array, int arrayIndex)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Remove(T item)
+        {
+            for (int i = 0; i < Count; ++i)
+            {
+                if (EqualityComparer<T>.Default.Equals(m_items[i], item))
+                {
+                    for (int indexForShift = i+1; indexForShift < Count; ++indexForShift)
+                    {
+                        m_items[indexForShift-1] = m_items[indexForShift];
+                    }
+
+                    --Count;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            throw new NotImplementedException();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            throw new NotImplementedException();
         }
     }
 }
