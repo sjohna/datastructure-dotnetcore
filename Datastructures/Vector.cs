@@ -55,17 +55,28 @@ namespace Datastructures
 
         public void Clear()
         {
-            throw new NotImplementedException();
+            Count = 0;
         }
 
         public bool Contains(T item)
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < Count; ++i)
+            {
+                if (EqualityComparer<T>.Default.Equals(m_items[i], item))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < Count; ++i)
+            {
+                array[arrayIndex + i] = m_items[i];
+            }
         }
 
         public bool Remove(T item)
@@ -89,12 +100,15 @@ namespace Datastructures
 
         public IEnumerator<T> GetEnumerator()
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < Count; ++i)
+            {
+                yield return m_items[i];
+            }
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            throw new NotImplementedException();
+            return this.GetEnumerator();
         }
     }
 }
