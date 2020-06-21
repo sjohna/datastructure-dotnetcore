@@ -10,6 +10,8 @@ namespace Datastructures
     {
         private T[] m_items;
 
+        public int Capacity => m_items.Length;
+
         public int Count 
         {
             get;
@@ -18,10 +20,15 @@ namespace Datastructures
 
         public bool IsReadOnly => false;
 
-        public Vector()
+        public Vector() : this(10)
+        {
+            
+        }
+
+        public Vector(int initialCapacity)
         {
             Count = 0;
-            m_items = new T[10];
+            m_items = new T[initialCapacity];
         }
 
         public void Add(T item)

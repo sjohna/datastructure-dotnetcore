@@ -20,6 +20,14 @@ namespace TestDataStructures
         public void Create()
         {
             Assert.AreEqual(0, m_vector.Count);
+            Assert.AreEqual(10, m_vector.Capacity);
+        }
+
+        [Test]
+        public void CreateWithCapacity()
+        {
+            m_vector = new Vector<int>(100);
+            Assert.AreEqual(100, m_vector.Capacity);
         }
     }
 }
