@@ -1,5 +1,3 @@
-
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,7 +20,7 @@ namespace Datastructures
 
         public Vector() : this(10)
         {
-            
+
         }
 
         public Vector(int initialCapacity)

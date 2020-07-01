@@ -11,6 +11,8 @@ namespace TestDataStructures
         Tests that all unbounded IList implementations should pass.
     */
     [TestFixture(typeof(Vector<int>))]
+    
+    // run tests against .NET standard library collections to make sure behavior is consistent with new collections
     [TestFixture(typeof(List<int>))]
     public class TestIListImplementation<List> where List : IList<int>, new()
     {
@@ -218,6 +220,77 @@ namespace TestDataStructures
 
             m_list.RemoveAt(1);
             Assert.IsTrue(Enumerable.SequenceEqual(new int[] {1,3}, m_list));
+        }
+
+        [Test]
+        public void IListScenario()
+        {
+            void DoScenario() 
+            {
+                Assert.Throws<ArgumentOutOfRangeException>(() => { var x = m_list[0]; });
+                Assert.Throws<ArgumentOutOfRangeException>(() => { var x = m_list[-1]; });
+                Assert.Throws<ArgumentOutOfRangeException>(() => { var x = m_list[1]; });
+
+                Assert.Throws<ArgumentOutOfRangeException>(() => { m_list[0] = 7; });
+                Assert.Throws<ArgumentOutOfRangeException>(() => { m_list[-1] = 7; });
+                Assert.Throws<ArgumentOutOfRangeException>(() => { m_list[1] = 7; }); 
+
+                m_list.Add(1);
+                m_list.Add(2);
+                m_list.Add(3);
+                Assert.IsTrue(Enumerable.SequenceEqual(new int[] {1,2,3}, m_list));
+                Assert.AreEqual(2, m_list.IndexOf(3));
+                Assert.AreEqual(-1, m_list.IndexOf(4));
+                Assert.AreEqual(1, m_list[0]);
+
+                m_list.Remove(3);
+                m_list.Remove(4);
+                Assert.IsTrue(Enumerable.SequenceEqual(new int[] {1,2}, m_list));
+                Assert.AreEqual(-1, m_list.IndexOf(3));
+                Assert.AreEqual(-1, m_list.IndexOf(4));
+                Assert.AreEqual(1, m_list[0]);
+
+                m_list.Add(3);
+                m_list.Add(4);
+                m_list.Add(5);
+                Assert.IsTrue(Enumerable.SequenceEqual(new int[] {1,2,3,4,5}, m_list));
+                Assert.AreEqual(1, m_list[0]);
+                Assert.AreEqual(3, m_list[2]);
+                Assert.AreEqual(5, m_list[4]);
+
+                m_list.RemoveAt(2);
+                Assert.IsTrue(Enumerable.SequenceEqual(new int[] {1,2,4,5}, m_list));
+                Assert.AreEqual(1, m_list[0]);
+                Assert.AreEqual(5, m_list[3]);
+                Assert.Throws<ArgumentOutOfRangeException>(() => { var x = m_list[4]; });
+
+                m_list.Insert(2,3);
+                Assert.IsTrue(Enumerable.SequenceEqual(new int[] {1,2,3,4,5}, m_list));
+                Assert.AreEqual(1, m_list[0]);
+
+                m_list.Clear();
+                
+                for (int i = 0; i < 100; ++i)
+                {
+                    m_list.Add(100*i + 13);
+                    Assert.AreEqual(m_list.Count-1, m_list.IndexOf(100*i + 13));
+                }
+
+                Assert.AreEqual(100, m_list.Count);
+
+                for (int i = 0; i < m_list.Count; ++i)
+                {
+                    m_list[i] = i;
+                }
+
+                Assert.IsTrue(Enumerable.SequenceEqual(Enumerable.Range(0,100), m_list));
+            }
+
+            for (int i = 0; i < 5; ++i)
+            {
+                DoScenario();
+                m_list.Clear();
+            }
         }
     }
 }
