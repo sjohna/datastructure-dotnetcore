@@ -223,6 +223,17 @@ namespace TestDataStructures
         }
 
         [Test]
+        public void RemoveAtOutOfRange()
+        {
+            m_list.Add(1);
+            m_list.Add(2);
+            m_list.Add(3);
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => m_list.RemoveAt(-1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => m_list.RemoveAt(3));
+        }
+
+        [Test]
         public void IListScenario()
         {
             void DoScenario() 

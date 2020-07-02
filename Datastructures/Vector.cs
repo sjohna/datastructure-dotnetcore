@@ -41,18 +41,18 @@ namespace Datastructures
         {
             get
             {
-                RangeCheckIndexer(index);
+                RangeCheckAccess(index);
                 return m_items[index];
             }
 
             set
             {
-                RangeCheckIndexer(index);
+                RangeCheckAccess(index);
                 m_items[index] = value;
             }
         }
 
-        private void RangeCheckIndexer(int index)
+        private void RangeCheckAccess(int index)
         {
             if (index < 0 || index >= Count) 
             {
@@ -152,6 +152,7 @@ namespace Datastructures
 
         public void RemoveAt(int index)
         {
+            RangeCheckAccess(index);
             for (int indexForShift = index+1; indexForShift < Count; ++indexForShift)
             {
                 m_items[indexForShift-1] = m_items[indexForShift];
