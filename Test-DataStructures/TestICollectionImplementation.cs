@@ -1,7 +1,6 @@
 using NUnit.Framework;
 
 using Datastructures;
-using System.Linq;
 
 namespace TestDataStructures
 {
@@ -18,6 +17,10 @@ namespace TestDataStructures
     [TestFixture(typeof(System.Collections.Generic.LinkedList<int>))]
     [TestFixture(typeof(System.Collections.Generic.HashSet<int>))]
     [TestFixture(typeof(System.Collections.Generic.SortedSet<int>))]
+
+    // test traversible list implementations
+    [TestFixture(typeof(TraversibleList<Vector<int>,int>))]
+    [TestFixture(typeof(TraversibleList<System.Collections.Generic.List<int>,int>))]
     public class TestICollectionImplementation<Collection> where Collection : System.Collections.Generic.ICollection<int>, new()
     {
         private Collection m_collection;
