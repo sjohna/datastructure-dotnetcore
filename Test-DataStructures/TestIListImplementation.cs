@@ -14,6 +14,10 @@ namespace TestDataStructures
     
     // run tests against .NET standard library collections to make sure behavior is consistent with new collections
     [TestFixture(typeof(List<int>))]
+
+    // test traversible list implementations
+    [TestFixture(typeof(TraversibleList<Vector<int>,int>))]
+    [TestFixture(typeof(TraversibleList<List<int>,int>))]
     public class TestIListImplementation<List> where List : IList<int>, new()
     {
         private List m_list;
